@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { uploadImage, getMyImages, detletImages } = require('../controller/ImageController');
 const upload = require('../middleware/uploadMiddleware');
-const { authUser } = require('../middleware/Auth');
+const  authUser  = require('../middleware/Auth');
 
-router.post('/upload', authUser, upload.single('file'), uploadImage);
-router.get('/my-uploads', authUser, getMyImages);
-router.delete('/delete/:imageId', authUser, detletImages);
+router.post('/upload', authUser.authUser, upload.single('file'), uploadImage);
+router.get('/my-uploads', authUser.authUser, getMyImages);
+router.delete('/delete/:imageId', authUser.authUser, detletImages);
 
 module.exports = router;
