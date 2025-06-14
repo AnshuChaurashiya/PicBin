@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { uploadImage, getMyImages, detletImages } = require('../controller/ImageController');
 const upload = require('../middleware/uploadMiddleware');
-const  authUser  = require('../middleware/auth');
+const  authUser  = require('../middleware/Auth');
 
 router.post('/upload', authUser.authUser, upload.single('file'), uploadImage);
 router.get('/my-uploads', authUser.authUser, getMyImages);
