@@ -4,9 +4,6 @@ import axios from 'axios';
 export const UserContexData = createContext();
 
 const UserContex = ({ children }) => {
-
-
-  // Initialize user state with null
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,6 +19,7 @@ const UserContex = ({ children }) => {
       } catch (error) {
         console.error('Error loading user from storage:', error);
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
       }
     };
 
@@ -49,8 +47,9 @@ const UserContex = ({ children }) => {
         );
 
         if (response.status === 200) {
-          setUser(response.data.user);
-          localStorage.setItem('user', JSON.stringify(response.data.user));
+          const userData = response.data.user;
+          setUser(userData);
+          localStorage.setItem('user', JSON.stringify(userData));
         }
       } catch (error) {
         console.error('Error restoring user session:', error.message);
@@ -65,22 +64,23 @@ const UserContex = ({ children }) => {
     fetchUserProfile();
   }, []);
 
-  
-
-  const logout = () => {
-    const token = localStorage.getItem('token');
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/logout`,{
-      headers: {
-        Authorization: `Bearer ${token}`
+  const logout = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/logout`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
       }
-    }).then((response) => {
-      if(response.status === 200){
-        localStorage.removeItem('token');
-
-        localStorage.removeItem('user');
-        setUser(null);
-      }
-    })
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setUser(null);
+    }
   };
 
   return (

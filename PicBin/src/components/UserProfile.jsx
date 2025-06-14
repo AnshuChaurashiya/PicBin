@@ -158,19 +158,19 @@ const UserProfile = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[...uploadedImages]
   .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by most recent
-  .slice(0, 3).map((image) => (
+  .slice(0, 4).map((image) => (
                 <div
                   key={image._id}
                   className="group relative bg-gray-50 rounded-xl overflow-hidden transform transition-all duration-200 hover:scale-[1.02]"
                 >
-                  <div className="aspect-w-16 aspect-h-9">
-                    <img
-                      src={image.originalImage}
-                      alt="Uploaded"
-                       className="w-full h-full md:h-[150px] object-cover md:object-contain bg-white"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-200 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <div className="aspect-w-16 aspect-h-9 border-gray-200 shadow-2xs border rounded-xl overflow-hidden">
+                      <img
+                        src={image.originalImage}
+                        alt="Uploaded"
+                        className="w-full h-full md:h-[150px] object-cover md:object-contain bg-white"
+                      />
+                    </div>
+                    <div className="absolute inset-0  backdrop-blur-sm   bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <div className="flex space-x-3">
                       <button
                         onClick={() => copyImageUrl(image.originalImage)}

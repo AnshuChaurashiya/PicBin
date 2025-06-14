@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { UserContexData } from './UserContex';
 
 const ImageContext = createContext();
 
@@ -15,9 +16,16 @@ export const ImageProvider = ({ children }) => {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingImages, setLoadingImages] = useState(true);
+  const { user } = useContext(UserContexData);
 
   // Fetch user's uploaded images
   const fetchMyImages = async () => {
+    if (!user) {
+      setUploadedImages([]);
+      setLoadingImages(false);
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/images/my-uploads`, {
@@ -38,6 +46,16 @@ export const ImageProvider = ({ children }) => {
       setLoadingImages(false);
     }
   };
+
+  // Fetch images when user changes
+  useEffect(() => {
+    if (user) {
+      fetchMyImages();
+    } else {
+      setUploadedImages([]);
+      setLoadingImages(false);
+    }
+  }, [user]);
 
   // Upload new image
   const uploadImage = async (file) => {
@@ -107,11 +125,6 @@ export const ImageProvider = ({ children }) => {
     navigator.clipboard.writeText(url);
     toast.success('URL copied to clipboard!');
   };
-
-  // Fetch images when the component mounts
-  useEffect(() => {
-    fetchMyImages();
-  }, []);
 
   const value = {
     uploadedImages,

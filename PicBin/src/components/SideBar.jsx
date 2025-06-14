@@ -9,19 +9,42 @@ import { CiLogout } from "react-icons/ci";
 import { UserContexData } from '../context/UserContex';
 import { useNavigate,useLocation } from 'react-router-dom'
 import { IoImagesOutline } from "react-icons/io5";
+import axios from 'axios';
 
 function Sidebar() {
   const { user, setUser } = React.useContext(UserContexData);
   const navigate = useNavigate();
   const location = useLocation()
 
-  const handleLogout = () => {
-    // Clear user data from context
-    setUser(null);
-    // Remove token from localStorage
-    localStorage.removeItem('token');
-    // Navigate to login page
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        // Call backend logout endpoint
+        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/logout`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      }
+      
+      // Clear user data from context
+      setUser(null);
+      
+      // Remove all user-related data from localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      // Navigate to login page
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if the backend call fails, clear local data
+      setUser(null);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      navigate('/login');
+    }
   };
 
   return (
@@ -56,15 +79,15 @@ function Sidebar() {
       <div className="w-full px-4 py-2 ">
         <nav className="flex justify-between items-center text-gray-600 font-medium">
           <Link to={'/home'} className="flex flex-col items-center gap-1">
-            <span className='text-xl p-2 hover:bg-indigo-600 hover:text-white duration-500 transition-all rounded-full'><LuHouse /></span>
+            <span className={`text-xl p-2 hover:bg-indigo-600 hover:text-white duration-500 transition-all rounded-full ${location.pathname === '/home' ? "bg-indigo-600   text-white duration-500  " : "" }`}><LuHouse /></span>
             <span className="text-xs">Home</span>
           </Link>
           <Link to={'/Profile'} className="flex flex-col items-center gap-1">
-            <span className='text-xl p-2 hover:bg-indigo-600 hover:text-white duration-500 transition-all rounded-full'><CiUser /></span>
+            <span className={`text-xl p-2 hover:bg-indigo-600 hover:text-white duration-500 transition-all rounded-full ${location.pathname === '/Profile' ? "bg-indigo-600   text-white duration-500  " : "" }`}><CiUser /></span>
             <span className="text-xs">Profile</span>
           </Link>
           <Link to={'/Images'} className="flex flex-col items-center gap-1">
-            <span className='text-xl p-2 hover:bg-indigo-600 hover:text-white duration-500 transition-all rounded-full'><IoImagesOutline /></span>
+            <span className={`text-xl p-2 hover:bg-indigo-600 hover:text-white duration-500 transition-all rounded-full ${location.pathname === '/Images' ? "bg-indigo-600   text-white duration-500  " : "" }`}><IoImagesOutline /></span>
             <span className="text-xs">Images</span>
           </Link>
           <button onClick={handleLogout} className="flex flex-col items-center gap-1">
