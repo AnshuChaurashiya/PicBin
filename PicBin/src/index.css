@@ -1,0 +1,8 @@
+@import "tailwindcss";
+body::-webkit-scrollbar {
+    display: none;
+  }
+
+  .logo{
+    border-radius: 100%;
+  }

@@ -1,0 +1,93 @@
+import React, { createContext, useEffect, useState } from 'react';
+import axios from 'axios';
+
+export const UserContexData = createContext();
+
+const UserContex = ({ children }) => {
+
+
+  // Initialize user state with null
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Load user data from localStorage on initial render
+  useEffect(() => {
+    const loadUserFromStorage = () => {
+      try {
+        const savedUser = localStorage.getItem('user');
+        if (savedUser) {
+          const parsedUser = JSON.parse(savedUser);
+          setUser(parsedUser);
+        }
+      } catch (error) {
+        console.error('Error loading user from storage:', error);
+        localStorage.removeItem('user');
+      }
+    };
+
+    loadUserFromStorage();
+  }, []);
+
+  // Fetch user profile if token exists
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/user/profile`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          setUser(response.data.user);
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
+      } catch (error) {
+        console.error('Error restoring user session:', error.message);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  
+
+  const logout = () => {
+    const token = localStorage.getItem('token');
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/logout`,{
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then((response) => {
+      if(response.status === 200){
+        localStorage.removeItem('token');
+
+        localStorage.removeItem('user');
+        setUser(null);
+      }
+    })
+  };
+
+  return (
+    <UserContexData.Provider value={{ user, setUser, loading, logout }}>
+      {children}
+    </UserContexData.Provider>
+  );
+};
+
+export default UserContex;
