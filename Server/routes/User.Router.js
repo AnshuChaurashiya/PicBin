@@ -4,6 +4,7 @@ const {body} = require('express-validator')
 const UserController = require('../controller/User_Controller')
 const AuthUser = require('../middleware/Auth')
 const AdminMiddleware = require('../middleware/Admin_Auth')
+console.log(AuthUser)
 
 router.post('/register', [
     body('name').not().isEmpty().withMessage('Name is required'),
