@@ -1,9 +1,9 @@
 const express = require('express')
-const router = express()
+const router = express.Router()
 const {body} = require('express-validator') 
 const UserController = require('../controller/User_Controller')
-const  authUser = require('../middleware/Auth')
-const  AdminMiddleware = require('../middleware/Admin_Auth')
+const authUser = require('../middleware/Auth')
+const AdminMiddleware = require('../middleware/Admin_Auth')
 
 router.post('/register', [
     body('name').not().isEmpty().withMessage('Name is required'),
@@ -11,19 +11,18 @@ router.post('/register', [
     body('password').isLength({min: 8}).withMessage('Password must be atleast 8 characters'),
 ], UserController.registerUser)
 
-
 router.post('/login', [
     body('email').isEmail().withMessage('Invalid email'),
     body('password').isLength({min: 8}).withMessage('Password must be atleast 8 characters'),
 ], UserController.loginUser)
  
-router.get("/profile", authUser.authUser, UserController.userProfile)
-router.put("/profile/update", authUser.authUser, UserController.getUserDataUpdata)
-router.get("/logout", authUser.authUser, UserController.logoutUser)
+router.get("/profile", authUser, UserController.userProfile)
+router.put("/profile/update", authUser, UserController.getUserDataUpdata)
+router.get("/logout", authUser, UserController.logoutUser)
  
+// admin routes
+router.get("/admin", authUser, AdminMiddleware.AdminMideleware, UserController.getAdminProfile)
+router.get("/admin/user", authUser, AdminMiddleware.AdminMideleware, UserController.getAllUsers)
+router.get("/admin/users/:id/role", authUser, AdminMiddleware.AdminMideleware, UserController.updateUserRole)
 
-// admin
-router.get("/admin", AdminMiddleware.AdminMideleware,authUser.authUser, UserController.getAdminProfile)
-router.get("/admin/user", AdminMiddleware.AdminMideleware,authUser.authUser, UserController.getAllUsers)
-router.get("/admin/users/:id/role", AdminMiddleware.AdminMideleware,authUser.authUser, UserController.updateUserRole)
 module.exports = router;

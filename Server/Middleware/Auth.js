@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const UserModel = require('../models/User_Models');
 require('dotenv').config();
 
-module.exports.authUser = async (req, res, next) => {
+const authUser = async (req, res, next) => {
     try {
         // Get token from cookies or authorization header
         const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
@@ -32,3 +32,5 @@ module.exports.authUser = async (req, res, next) => {
         return res.status(401).json({ message: 'Authentication failed or token expired' });
     }
 };
+
+module.exports = authUser;
