@@ -28,7 +28,7 @@ export const ImageProvider = ({ children }) => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/images/my-uploads`, {
+      const response = await fetch(`https://picbin-server.onrender.com/api/images/my-uploads`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -70,7 +70,7 @@ export const ImageProvider = ({ children }) => {
       formData.append('file', file);
 
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/images/upload`, {
+      const response = await fetch(`https://picbin-server.onrender.com/api/images/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -99,7 +99,7 @@ export const ImageProvider = ({ children }) => {
   const deleteImage = async (imageId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/images/delete/${imageId}`, {
+      const response = await fetch(`https://picbin-server.onrender.com/api/images/delete/${imageId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
