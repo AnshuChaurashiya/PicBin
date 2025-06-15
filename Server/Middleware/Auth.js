@@ -11,7 +11,7 @@ const authUser = async (req, res, next) => {
             return res.status(401).json({ message: "Unauthorized: No token provided" });
         }
 
-        // Verify the token
+        // Verify the token 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         // Find the user by ID
