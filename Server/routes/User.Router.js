@@ -21,8 +21,8 @@ router.put("/profile/update", authUser, UserController.getUserDataUpdata)
 router.get("/logout", authUser, UserController.logoutUser)
  
 // admin routes
-router.get("/admin", [authUser, AdminMiddleware.AdminMideleware], UserController.getAdminProfile)
-router.get("/admin/user", [authUser, AdminMiddleware.AdminMideleware], UserController.getAllUsers)
-router.get("/admin/users/:id/role", [authUser, AdminMiddleware.AdminMideleware], UserController.updateUserRole)
+router.get("/admin", authUser, AdminMiddleware.AdminMideleware, UserController.getAdminProfile)
+router.get("/admin/user", authUser, AdminMiddleware.AdminMideleware, UserController.getAllUsers)
+router.get("/admin/users/:id/role", authUser, AdminMiddleware.AdminMideleware, UserController.updateUserRole)
 
 module.exports = router;
