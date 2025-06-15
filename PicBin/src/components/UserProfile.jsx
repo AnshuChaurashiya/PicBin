@@ -34,7 +34,7 @@ const UserProfile = () => {
   const UserSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/user/profile/update`, edituserData, {
+      const response = await axios.put(`https://picbin-server.onrender.com/user/profile/update`, edituserData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
