@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser')
 const imageRoutes = require('./routes/imageRoute');
 
 app.use(cors({
-  origin: process.env.FRONTED_URL,
+  origin: "https://picbin.onrender.com",
   credentials: true  ,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']            
