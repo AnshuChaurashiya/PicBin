@@ -62,7 +62,7 @@ const Register = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/user/register`,
+        `https://picbin-server.onrender.com/user/register`,
         formData
       );
 
