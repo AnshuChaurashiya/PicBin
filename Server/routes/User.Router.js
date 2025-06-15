@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const {body} = require('express-validator') 
 const UserController = require('../controller/User_Controller')
-const authUser = require('../middleware/Auth')
+const authUser = require('../middleware/auth')
 const AdminMiddleware = require('../middleware/Admin_Auth')
 
 router.post('/register', [
@@ -21,8 +21,8 @@ router.put("/profile/update", authUser, UserController.getUserDataUpdata)
 router.get("/logout", authUser, UserController.logoutUser)
  
 // admin routes
-router.get("/admin", authUser, AdminMiddleware.AdminMideleware, UserController.getAdminProfile)
-router.get("/admin/user", authUser, AdminMiddleware.AdminMideleware, UserController.getAllUsers)
-router.get("/admin/users/:id/role", authUser, AdminMiddleware.AdminMideleware, UserController.updateUserRole)
+router.get("/admin", [authUser, AdminMiddleware.AdminMideleware], UserController.getAdminProfile)
+router.get("/admin/user", [authUser, AdminMiddleware.AdminMideleware], UserController.getAllUsers)
+router.get("/admin/users/:id/role", [authUser, AdminMiddleware.AdminMideleware], UserController.updateUserRole)
 
 module.exports = router;
