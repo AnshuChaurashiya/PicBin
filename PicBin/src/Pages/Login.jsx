@@ -25,7 +25,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/login`, {
+      const response = await fetch(`https://picbin-server.onrender.com/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
