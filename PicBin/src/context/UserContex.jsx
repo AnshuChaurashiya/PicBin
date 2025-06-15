@@ -38,7 +38,7 @@ const UserContex = ({ children }) => {
 
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/user/profile`,
+          `https://picbin-server.onrender.com/user/profile`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -68,7 +68,7 @@ const UserContex = ({ children }) => {
     try {
       const token = localStorage.getItem('token');
       if (token) {
-        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/logout`, {
+        await axios.get(`https://picbin-server.onrender.com/user/logout`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
