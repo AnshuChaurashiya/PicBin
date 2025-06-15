@@ -1,6 +1,57 @@
 const UserService = require('../Services/UserServices');
 const UserModel = require("../models/User_Models");
 const { validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
+// Authentication Middleware
+module.exports.AuthUser = async (req, res, next) => {
+    try {
+        // Get token from cookies or authorization header
+        const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized: No token provided" });
+        }
+
+        // Verify the token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Find the user by ID
+        const user = await UserModel.findById(decoded.id).select("-password");
+
+        if (!user) {
+            return res.status(401).json({ message: "Unauthorized: User not found" });
+        }
+
+        // Attach user to request object
+        req.user = user;
+
+        // Proceed to next middleware/route handler
+        next();
+
+    } catch (error) {
+        console.error("Authentication error:", error);
+        return res.status(401).json({ message: 'Authentication failed or token expired' });
+    }
+};
+
+// Admin Authentication Middleware
+module.exports.AuthAdmin = async (req, res, next) => {
+    try {
+        // First authenticate the user
+        await module.exports.AuthUser(req, res, () => {
+            // Check if user is admin
+            if (req.user.role !== 'admin') {
+                return res.status(403).json({ message: "Access denied: Admin privileges required" });
+            }
+            next();
+        });
+    } catch (error) {
+        console.error("Admin authentication error:", error);
+        return res.status(401).json({ message: 'Admin authentication failed' });
+    }
+};
 
 // Register User
 module.exports.registerUser = async (req, res) => {
@@ -66,16 +117,16 @@ module.exports.loginUser = async (req, res) => {
 module.exports.userProfile = async (req, res) => {
     try {
         const user = req.user;
-        res.status(200).json({ user }); // FIXED: join() → json()
+        res.status(200).json({ user });
     } catch (error) {
         return res.status(500).json({ message: 'Profile fetch error' });
     }
 };
 
-// usser ipdate data
+// Update User Data
 module.exports.getUserDataUpdata = async (req, res) => {
     try {
-        const userId = req.user._id; // from auth middleware
+        const userId = req.user._id;
         const { name, email, password } = req.body;
         const updates = {};
         if (name) updates.name = name;
@@ -103,7 +154,7 @@ module.exports.getUserDataUpdata = async (req, res) => {
     } catch (error) {
         return res.status(500).json({message: error.message})
     }
-}
+};
 
 // Logout User
 module.exports.logoutUser = async (req, res) => {
@@ -115,55 +166,51 @@ module.exports.logoutUser = async (req, res) => {
     }
 };
 
-// Admin Route (Starter)
-
-module.exports.getAdminProfile = async (req, res, next) => {
+// Admin Routes
+module.exports.getAdminProfile = async (req, res) => {
     try {
-        const user = req.user
+        const user = req.user;
         res.status(200).json({
             user,
             isAdmin: true
-        })
+        });
     } catch (error) {
-        return res.status(500).json({message: error.message})
+        return res.status(500).json({message: error.message});
     }
-}
+};
 
-
-// updateUserRole
+// Update User Role (Admin only)
 module.exports.updateUserRole = async (req, res) => {
     try {
-        const {id} = req.params
-        const {role} = req.body
+        const {id} = req.params;
+        const {role} = req.body;
 
         if(!['admin', 'user'].includes(role)){
-            res.status(200).json({ message: 'Admin route is working.' });
+            return res.status(400).json({ message: 'Invalid role specified' });
         }
 
-        const user = await UserModel.findByIdAndUpdate({
-            _id: id,
-            role: role,
-            new:true
-        }.select('-password'))
+        const user = await UserModel.findByIdAndUpdate(
+            id,
+            { role: role },
+            { new: true }
+        ).select('-password');
 
         if (!user) {
-            return res.status(404).json({message: "User not found"})
+            return res.status(404).json({message: "User not found"});
         }
 
-        res.status(200).json({user})
-
-
+        res.status(200).json({user});
     } catch (error) {
         return res.status(500).json({ message: 'updateUserRole server error' });
     }
 };
 
-
-module.exports.getAllUsers = async (req, res, next) => {
+// Get All Users (Admin only)
+module.exports.getAllUsers = async (req, res) => {
     try {
-        const users = await UserModel.find().select('-password')
-        res.status(200).json({users})
+        const users = await UserModel.find().select('-password');
+        res.status(200).json({users});
     } catch (error) {
-        return res.status(500).json({message: error.message})
+        return res.status(500).json({message: error.message});
     }
-}
+};
