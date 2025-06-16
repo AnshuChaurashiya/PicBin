@@ -21,7 +21,7 @@ function Sidebar() {
       const token = localStorage.getItem('token');
       if (token) {
         // Call backend logout endpoint
-        await axios.get(`https://picbin-server.onrender.com/user/logout`, {
+        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/logout`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -75,7 +75,7 @@ function Sidebar() {
     </div>
 
 {/* mobile nav */}
-    <div className="md:hidden fixed bottom-2 left-0 right-0 w-[90%] m-auto bg-white rounded-4xl shadow-lg z-50">
+    <div className="md:hidden fixed bottom-2 left-0 right-0 w-[93%] m-auto bg-white rounded-4xl border border-gray-400 shadow-lg z-50">
       <div className="w-full px-4 py-2 ">
         <nav className="flex justify-between items-center text-gray-600 font-medium">
           <Link to={'/home'} className="flex flex-col items-center gap-1">
@@ -90,8 +90,8 @@ function Sidebar() {
             <span className={`text-xl p-2 hover:bg-indigo-600 hover:text-white duration-500 transition-all rounded-full ${location.pathname === '/Images' ? "bg-indigo-600   text-white duration-500  " : "" }`}><IoImagesOutline /></span>
             <span className="text-xs">Images</span>
           </Link>
-          <button onClick={handleLogout} className="flex flex-col items-center gap-1">
-            <span className='text-xl p-2 hover:bg-red-600 hover:text-white duration-500 transition-all rounded-full'><CiLogout /></span>
+          <button onClick={handleLogout} className="flex  flex-col items-center gap-1">
+            <span className='text-xl p-2 hover:bg-red-600 bg-red-500 rounded-full text-white hover:text-white duration-500 transition-all rounded-full'><CiLogout /></span>
             <span className="text-xs">Logout</span>
           </button>
         </nav>
