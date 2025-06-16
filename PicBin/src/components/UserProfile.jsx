@@ -62,11 +62,11 @@ const UserProfile = () => {
         {/* Profile Header */}
         <div className="  rounded-2xl shadow-sm  p-2 sm:p-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-            <div className=' flex items-center   justify-between  w-full'>
+            <div className=' flex items-center  justify-between  w-full'>
               <h1 className="text-3xl  font-bold text-gray-900">Profile </h1>
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="mt-4 sm:mt-0 px-6 py-2.5 bg-blue-600  text-white rounded-full hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className=" sm:mt-0 px-6 py-2.5 bg-blue-600  text-white rounded-full hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               {isEditing ? 'Cancel' : 'Edit '}
             </button>
