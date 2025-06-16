@@ -62,7 +62,7 @@ const Register = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `https://picbin-server.onrender.com/user/register`,
+        `${import.meta.env.VITE_BACKEND_URL}/user/register`,
         formData
       );
 
@@ -97,9 +97,9 @@ const Register = () => {
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center">
                 <span className="w-8 h-8 bg-blue-600 rounded-full mr-2"></span>
-                <span className="text-xl font-bold text-gray-800">PickBin </span>
+                <span className="text-xl font-bold text-gray-800">PicBin </span>
               </div>
-              <nav className="hidden sm:flex space-x-6">
+              <nav className=" flex space-x-6">
                 <Link to="/" className="text-gray-600 hover:text-blue-600 transition-colors">Home</Link>
                 <Link to="/login" className="text-gray-600 hover:text-blue-600 transition-colors">Join</Link>
               </nav>
