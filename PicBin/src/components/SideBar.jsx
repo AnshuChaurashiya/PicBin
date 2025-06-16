@@ -21,7 +21,7 @@ function Sidebar() {
       const token = localStorage.getItem('token');
       if (token) {
         // Call backend logout endpoint
-        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/logout`, {
+        await axios.get(`https://picbin-server.onrender.com/user/logout`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
