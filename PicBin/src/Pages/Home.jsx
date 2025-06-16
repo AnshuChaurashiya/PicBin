@@ -39,7 +39,7 @@ const Home = () => {
         <div className="w-full mx-auto">
           {/* Upload Section */}
           <div className="bg-white rounded-3xl shadow-xl p-8 mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">Upload Your Image</h1>
+            <h1 className="md:text-3xl text-center text-xl font-bold text-gray-900 mb-8">Upload Your Image</h1>
             
             {/* Upload Area */}
             <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center hover:border-blue-400 transition-colors duration-200">
@@ -106,7 +106,7 @@ const Home = () => {
           </div>
 
           {/* Uploaded Images Section */}
-          <div className="bg-white rounded-3xl shadow-xl p-8">
+          <div className="bg-white rounded-3xl shadow-xl mb-20 p-2 ">
             <h2 className="text-xl font-bold text-gray-900 mb-6">Recent Uploaded Images</h2>
             
             {loadingImages ? (
@@ -119,43 +119,47 @@ const Home = () => {
                 <p className="text-gray-600">No images uploaded yet</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[...uploadedImages]
-  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by most recent
-  .slice(0, 4).map((image) => (
-                  <div key={image._id} className="relative group">
-                    <div className="aspect-w-16 aspect-h-9 border-gray-200 shadow-2xs border rounded-xl overflow-hidden">
-                      <img
-                        src={image.originalImage}
-                        alt="Uploaded"
-                        className="w-full h-full md:h-[150px] object-cover md:object-contain bg-white"
-                      />
-                    </div>
-                    <div className="absolute inset-0  backdrop-blur-sm   bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100">
-                      <div className="flex space-x-2">
+              <div className="columns-2 sm:columns-3 lg:columns-4 gap-4 space-y-4">
+              {[...uploadedImages]
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .slice(0, 8).map((image) => (
+                <div
+                  key={image._id}
+                  className="break-inside-avoid group relative bg-gray-50 rounded-xl overflow-hidden transform transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] mb-4"
+                >
+                  <div className="relative border-gray-200 shadow-sm border rounded-xl overflow-hidden">
+                    <img
+                      src={image.originalImage}
+                      alt="Uploaded"
+                      className="w-full h-auto object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100 group-active:opacity-100">
+                      <div className="flex space-x-4">
                         <button
                           onClick={() => copyImageUrl(image.originalImage)}
-                          className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
+                          className="p-3 bg-white/90 rounded-full hover:bg-white active:bg-white/80 transition-all duration-200 transform hover:scale-110 active:scale-95"
                           title="Copy URL"
                         >
-                          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                           </svg>
                         </button>
                         <button
                           onClick={() => deleteImage(image._id)}
-                          className="p-2 bg-white rounded-full hover:bg-gray-100 transition-colors"
+                          className="p-3 bg-white/90 rounded-full hover:bg-white active:bg-white/80 transition-all duration-200 transform hover:scale-110 active:scale-95"
                           title="Delete image"
                         >
-                          <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </button>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
             )}
           </div>
         </div>
